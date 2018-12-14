@@ -1,0 +1,194 @@
+The writeup for using this repo can be found HERE (FIXME).
+
+This directory is used to copy a separate go respository locally and
+run a single _test.go file in multiple test scenarios. Each test
+compares run times where two variables are swept through two ranges of
+numbers (eg. for concurrency batch sizes). The const variable settings
+are replaced in the main go package file.
+
+A jupyter notebook (running python) is used to collate and display the
+data. 
+
+* Set up
+
+To configure this for your own test, download your repo and place it
+next to this directory (so they have the same parent directory).
+Update all the ~Test/*/config~ files. Make sure you have tags set up in
+the repo you are testing, for example these ~config~ files will check
+out different tags from the repo being tested (eg. serial_v1.0 or
+concurrent_v1.0). You'll probably need to update the variable names in
+the notebook (a future improvement to extract the config values into
+the notebook would eliminate this need).
+
+If someone actually wants to try using this for your own tests, please
+contact me through github (create an issue) and I can provide more
+step-by-step instructions for modifying the config files.
+
+Note: The _test.go file was engineered to run on the order of seconds,
+so the notebook only converts for this case, but it should be easy
+enough to update the formatting to handle more cases if necessary. The
+_test.go file will not be included for reasons stated in the Medium
+article. 
+
+* Dependencies
+  - [[https://golang.org/dl/][Go]] These tests used "go version go1.11.1 darwin/amd64"
+  - [[http://jupyter.org/install][Jupyter Notebooks with python]] recommendation: use anaconda
+    (these tests used Python 3.6.5 with conda 4.5.11)
+  - [[https://pandas.pydata.org/][Pandas]] should come with anaconda, or: `conda install pandas`
+  - [[https://seaborn.pydata.org][Seaborn]] with anaconda: `conda install seaborn`
+  - [[https://imagemagick.org/script/download.php][ImageMagick]] for the `convert` command to build heatmap animations
+    (these tests used Version: ImageMagick 7.0.8-11 Q16 x86_64
+    2018-08-29)
+
+* To run the Parameter Search:
+
+#+BEGIN_SRC sh
+./paramSearch.sh
+#+END_SRC
+
+This will launch parameter searches in the of the subdirectories of
+Tests/. Finally, a jupyter notebook (or multiple) will be launched
+displaying the results. Read the notebook to update the cells with the
+lastest data.
+
+./paramSearch.sh runs other scripts, also named paramSearch.sh, found
+in each subdirectory of Tests/.
+
+You can modify this main script paramSearch.sh script to explicity
+call specific paramSearch.sh scripts in the Trials.
+
+* Note about Test/Serial
+
+Tests/Serial is not technically a parameter search for concurrency
+limits. Instead, it produces a benchmark for the original, serial,
+non-concurrent version.
+
+Look in ~Tests/Serial/results~ for relevant output.
+
+* Organization
+** The paramSearch.sh script and _test.go file
+
+   The main paramSearch.sh file is located in this directory, as is
+   the main _test.go file used for all the tests.
+
+   You should be able to change directories to Tests/X and run the
+   paramSearch.sh script there (as well as being called from the top
+   level paramSearch.sh).
+
+   The intent is that all the Test results are consistent using the
+   same top level test file (the file ending _test.go). If you change
+   the test file, you should delete all the results (Tests/*/results)
+   directories too, since it is assumed that all results are valid for
+   comparison. Assuming all pre-existing data is valid and useful,
+   you'll probably want to back it up somewhere else first. You can
+   delete all results with src/rm_results.sh but note it will remove
+   all results from all tests. You'll be prompted before action is
+   taken.
+
+** Top level ~src/~ directory
+
+   The top level ~src/~ directory is for utility scripts and scripts
+   shared between tests
+
+** Tests and Trials
+
+   Conceptually a Test has specific parameters set in the
+   Tests/X/config file, such as the low and high bounds of the
+   parameter to test and how much to increase the value for the grid
+   search.
+
+   Each Test can have many Trials which will appear in data/stats with
+   the names trial001, trial002, etc. Files, such as images, which
+   derive from these trials should have the trial name in their file
+   names.
+
+   Files with _AllTrials in their name are assumed to be formed from the
+   combination of multiple trials.
+
+   You can create a new test by copying one of the Test/X
+   subdirectories and customizing it.
+
+** Folder structure and file naming
+
+   The folder structure should resemble this example:
+
+   #+BEGIN_QUOTE
+   Tests/ConcurrentBroad
+   Tests/ConcurrentBroad/paramSearch.sh
+   Tests/ConcurrentBroad/config
+   Tests/ConcurrentBroad/tmp
+   Tests/ConcurrentBroad/data
+   Tests/ConcurrentBroad/data/images
+   Tests/ConcurrentBroad/data/stats
+   Tests/ConcurrentBroad/data/stats/trial001 # <- generated
+   Tests/ConcurrentBroad/data/stats/trial002 # <- generated
+   Tests/ConcurrentBroad/results
+   Tests/ConcurrentBroad/results/images
+   Tests/ConcurrentBroad/notebook.ipynb
+   #+END_QUOTE
+
+   Rationale: ~data/~ is for calculating intermediate results before
+   placing them in ~results/~. Results is separate so you can go there
+   directly to see the final output. ~notebook.ipynb~ is not in ~results/~
+   because all of ~tmp/~, ~data/~, ~results/~ should be able to be deleted
+   to start from scratch. ~notebook.ipynb~ contains code that needs to
+   be kept for the future to combine intermediate data into final
+   results. Technically the notebook could go in ~src/~, but it seems
+   fine to leave it at the top level to make it easier to find. You
+   should be able to call: `jupyter notebook notebook.ipynb` from
+   within the Tests/X directory. The notebook will use default values
+   in the notebook itself, but these should match the settings in the
+   ~config~ file. A future improvement could be for the notebook to
+   extract these settings from ~config~, but duplication is fine for the
+   time being. ~tmp/~ contains the copied repositories but they'll be
+   deleted during testing if you leave REMOVE_REPO=true in ~config~.
+
+*** Naming Tests
+
+    I use "ConcurrentBroad" for my first range of variables and
+    "ConcurrentNarrow to "zoom in" to a smaller range of values. I was
+    able to just copy the Tests/ConcurrentBroad directory and update
+    the values in ~config~ before running paramSearch.sh in
+    Tests/ConcurrentNarrow. 
+
+    You might want to make a new test for each machine you test on
+    with different numbers of logical threads available. 
+
+* Customization
+
+You could customize your own version by reviewing and updating all the
+scripts. 
+
+I've tried to isolate the main changes you might make in the ~config~
+files (~Tests/*/config~). But you'd need to dive deeper into the
+scripts, for example, if you wanted to change the regular expression
+that matches the int constants in the source go package.
+
+* Useful commands
+
+** in Zsh
+
+#+BEGIN_SRC sh
+cd Tests/ConcurrentBroad
+=rm -r **/*trial001* # use builtin rm to remove everything from trial 001
+#+END_SRC
+
+#+BEGIN_SRC sh
+cd Tests/ConcurrentBroad
+=rm -r **/*trial*      # use builtin rm to remove everything from individual trials
+=rm -r **/*_AllTrials* # use builtin rm to remove everything from combinied trials
+#+END_SRC
+* Future work
+** Store machine info per trial
+
+   It would probably be a good idea to store machine info from each
+   trial to compare running on different hardware (eg. different
+   numbers of logical threads). At some point, it arriving at a
+   predictive theory would be nice (if possible) -- is there a formula
+   for number tree leaves and number logical threads (maybe memory and
+   disk access statistics too) that could predict optimal values for
+   the batch sizeas without having to run the experiments. 
+
+** Calls to test_params.py could be run in parallel, but would need to be limited to a number of jobs. 
+   Here are some possible [[https://stackoverflow.com/questions/1537956/bash-limit-the-number-of-concurrent-jobs][solutions]].
+** (low priority) notebook could extract variables from config reliably when run from the command line. 

@@ -1,0 +1,29 @@
+# exported variables are used in python scripts
+
+TEST_NAME=ConcurrentNarrow
+REPO_TAG=concurrent_v1.0
+export REPO_NAME=MerkleTree
+TEST_FILE=${REPO_NAME}_test.go # replacement test file in ../..
+TOP=paramSearch
+
+REMOVE_REPO=true # set to exactly true to remove repo copies
+
+# values are set for a test of 1,000,000 leaves in the MerkleTree
+
+export VAR1=writeBatchLimit
+VAR1_START=1100
+VAR1_END=11000
+VAR1_MULT=1.6
+
+export VAR2=leafBatchLimit
+VAR2_START=5500
+VAR2_END=55000
+VAR2_MULT=1.6
+
+DATA_DIR=data
+export STATS_DIR=$DATA_DIR/stats
+export IMAGES_DIR=$DATA_DIR/images
+
+export RESULTS_DIR=results
+export RESULTS_IMAGES_DIR=$RESULTS_DIR/images
+RESULTS_FILE=$RESULTS_DIR/STATS_AllTrials.csv

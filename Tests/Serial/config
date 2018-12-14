@@ -1,0 +1,11 @@
+TEST_NAME=Serial
+REPO_TAG=serial_v1.0
+REPO_NAME=MerkleTree
+TEST_FILE=${REPO_NAME}_test.go # replacement test file in ../..
+TOP=paramSearch
+
+RESULTS_DIR=results
+RESULTS_FILE=$RESULTS_DIR/RESULTS.txt
+
+
+

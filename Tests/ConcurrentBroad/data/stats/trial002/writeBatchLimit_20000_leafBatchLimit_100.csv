@@ -1,0 +1,2 @@
+writeBatchLimit,leafBatchLimit,time
+20000,100,5.128s

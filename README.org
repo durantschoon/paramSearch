@@ -1,4 +1,4 @@
-The writeup for using this repo can be found HERE (Medium Article Pending...).
+The writeup for using this repo can be found on [[https://medium.com/@durant.schoon/testing-batch-sizes-for-concurrency-in-go-parameter-searching-263b246c8367][Medium]].
 
 This directory is used to copy a separate go respository locally and
 run a single _test.go file in multiple test scenarios. Each test

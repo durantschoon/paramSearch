@@ -1,4 +1,4 @@
-The writeup for using this repo can be found HERE (FIXME).
+The writeup for using this repo can be found HERE (Medium Article Pending...).
 
 This directory is used to copy a separate go respository locally and
 run a single _test.go file in multiple test scenarios. Each test

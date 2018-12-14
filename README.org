@@ -135,7 +135,7 @@ Look in ~Tests/Serial/results~ for relevant output.
    be kept for the future to combine intermediate data into final
    results. Technically the notebook could go in ~src/~, but it seems
    fine to leave it at the top level to make it easier to find. You
-   should be able to call: `jupyter notebook notebook.ipynb` from
+   should be able to call: =jupyter notebook notebook.ipynb= from
    within the Tests/X directory. The notebook will use default values
    in the notebook itself, but these should match the settings in the
    ~config~ file. A future improvement could be for the notebook to
@@ -147,9 +147,9 @@ Look in ~Tests/Serial/results~ for relevant output.
 
     I use "ConcurrentBroad" for my first range of variables and
     "ConcurrentNarrow to "zoom in" to a smaller range of values. I was
-    able to just copy the Tests/ConcurrentBroad directory and update
-    the values in ~config~ before running paramSearch.sh in
-    Tests/ConcurrentNarrow. 
+    able to just copy the ~Tests/ConcurrentBroad~ directory and update
+    the values in ~config~ before running ~paramSearch.sh~ in
+    ~Tests/ConcurrentNarrow~. 
 
     You might want to make a new test for each machine you test on
     with different numbers of logical threads available. 

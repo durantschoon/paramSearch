@@ -112,7 +112,7 @@ Look in ~Tests/Serial/results~ for relevant output.
 
    The folder structure should resemble this example:
 
-   #+BEGIN_QUOTE
+   #+BEGIN_EXAMPLE
    Tests/ConcurrentBroad
    Tests/ConcurrentBroad/paramSearch.sh
    Tests/ConcurrentBroad/config
@@ -125,7 +125,7 @@ Look in ~Tests/Serial/results~ for relevant output.
    Tests/ConcurrentBroad/results
    Tests/ConcurrentBroad/results/images
    Tests/ConcurrentBroad/notebook.ipynb
-   #+END_QUOTE
+   #+END_EXAMPLE
 
    Rationale: ~data/~ is for calculating intermediate results before
    placing them in ~results/~. Results is separate so you can go there
